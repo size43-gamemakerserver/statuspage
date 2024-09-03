@@ -42,16 +42,8 @@
             <Chart :points="loadHistory" />
         </div>
 
-        <h1>Detailed view</h1>
-        <div class="nodelist">
-            <!--<div class="internet">
-                The Internet
-            </div>
-            <div class="connections">
-                <svg width="100%" height="40">
-                    <line x1="50%" y1="0" x2="50%" y2="350" stroke="black" stroke-width="15" />
-                </svg>
-            </div>-->
+        <h1 v-if="status !== null">Detailed view</h1>
+        <div class="nodelist" v-if="status !== null">
             <Node :status="status.proxy" :isProxy="true"></Node>
             <div class="connections">
                 <svg width="100%" height="40"  v-for="(instance, index) in status.instances" :key="index">

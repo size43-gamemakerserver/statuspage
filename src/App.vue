@@ -18,6 +18,7 @@ export default {
                 1, 4, 66, 77,
                 54, 67, 13
             ],
+            incidents: [],
             status: {
                 proxy: {},
                 instances: []
@@ -27,15 +28,54 @@ export default {
     mounted: async function () {
         var self = this;
         async function update() {
-            var response = await fetch('https://gamemakerserver.com/dynamic/status.php');
-            var json = await response.json();
+            try {
+                var response = await fetch('https://gamemakerserver.com/dynamic/status.php?error=500');
+                if (response.status == 200) {
+                    var json = await response.json();
 
-            self.loadHistory = json.loadHistory;
-            self.incidents = json.incidents;
-            self.status = {
-                proxy: json.status.filter(x => x.isProxy)[0],
-                instances: json.status.filter(x => !x.isProxy),
-            };
+                    self.loadHistory = json.loadHistory;
+                    self.incidents = json.incidents;
+                    self.status = {
+                        proxy: json.status.filter(x => x.isProxy)[0],
+                        instances: json.status.filter(x => !x.isProxy),
+                    };
+                } else {
+                    console.log("Received status:", response);
+                    self.status = null;
+                    self.incidents = [
+                        {
+                            "title": "Retrieving server status failed",
+                            "closed": null,
+                            "logs": [
+                                {
+                                    "severity": "Critical",
+                                    "humanNeeded": true,
+                                    "description": "Unable to fetch server status. The server returned the following error: " + response.statusText + " (" + response.status + ").",
+                                    "loggedAt": Date.now(),
+                                }
+                            ]
+                        }
+                    ];
+                }
+            } catch (e) {
+                self.status = null;
+                self.incidents = [
+                    {
+                        "title": "Retrieving server status failed",
+                        "closed": null,
+                        "logs": [
+                            {
+                                "severity": "Critical",
+                                "humanNeeded": true,
+                                "description": "Fetching the server status failed with the following error: " + e.message,
+                                "loggedAt": Date.now(),
+                            }
+                        ]
+                    }
+                ];
+
+                console.log("Error while fetching status page:", e);
+            }
         }
 
         await update();

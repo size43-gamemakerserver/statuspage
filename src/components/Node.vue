@@ -194,12 +194,12 @@
                 {{ status.cpu | cpu }}%
                 <div class="expanded box">
                     <table class="value-table">
-                        <Indicator item-name="CPU" good=".25" bad=".75" :value="status.cpu">{{ status.cpu | cpu }}%</Indicator>
+                        <Indicator item-name="CPU" :good="0.25" :bad="0.75" :value="status.cpu">{{ status.cpu | cpu }}%</Indicator>
                         <Indicator item-name="RAM" :good="isProxy ? 300 : 200" :bad="isProxy ? 600 : 400" :value="status.ram">{{ status.ram }}MiB</Indicator>
-                        <Indicator v-if="!isProxy" item-name="Min. ping" good="50" bad="150" :value="status.minPing">{{ status.minPing }}ms</Indicator>
-                        <Indicator v-if="!isProxy" item-name="Avg. ping" good="200" bad="500" :value="status.avgPing">{{ status.avgPing }}ms</Indicator>
-                        <Indicator v-if="!isProxy" item-name="Avg. loop" good="5" bad="10" :value="status.avgTick + status.avgReceive">{{  status.avgTick + status.avgReceive | twoDigits }}ms</Indicator>
-                        <Indicator item-name="Error rate" good="3" bad="6" :value="status.errorRate">{{ status.errorRate | twoDigits }}</Indicator>
+                        <Indicator v-if="!isProxy" item-name="Min. ping" :good="50" :bad="150" :value="status.minPing">{{ status.minPing }}ms</Indicator>
+                        <Indicator v-if="!isProxy" item-name="Avg. ping" :good="200" :bad="500" :value="status.avgPing">{{ status.avgPing }}ms</Indicator>
+                        <Indicator v-if="!isProxy" item-name="Avg. loop" :good="5" :bad="10" :value="status.avgTick + status.avgReceive">{{  status.avgTick + status.avgReceive | twoDigits }}ms</Indicator>
+                        <Indicator item-name="Error rate" :good="3" :bad="6" :value="status.errorRate">{{ status.errorRate | twoDigits }}</Indicator>
                     </table>
                 </div>
             </div>
