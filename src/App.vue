@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <StatusView :status="status" :loadHistory="loadHistory" :incidents="incidents"/>
+        <StatusView :status="status" :loadHistory="loadHistory" :incidents="incidents" />
     </div>
 </template>
 

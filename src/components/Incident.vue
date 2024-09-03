@@ -81,13 +81,12 @@
             'closed': data.closed != null
         }">
         <h3>{{ data.title }}</h3>
-        <!-- <small>Started {{ data.started | relativeTime }}</small> -->
 
         <ul>
             <li :class="{
                 'human-needed': log.humanNeeded,    
             }" v-for="(log, index) in data.logs" :key="index">
-                <small>{{ log.loggedAt | relativeTime }}</small>
+                <small>{{ relativeTime(log.loggedAt) }}</small>
                 <b :class="'tag entry-' + log.severity">{{ log.severity }}</b>
                 {{ log.description }}
             </li>
@@ -96,10 +95,17 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
+
 export default {
     name: 'Node',
     props: {
         data: Object,
+    },
+    methods: {
+        relativeTime(date) {
+            return dayjs(date).fromNow();
+        }
     }
 }
 </script>
