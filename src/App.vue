@@ -29,7 +29,7 @@ export default {
         var self = this;
         async function update() {
             try {
-                var response = await fetch('https://gamemakerserver.com/dynamic/status.php?error=500');
+                var response = await fetch('https://gamemakerserver.com/dynamic/status.php');
                 if (response.status == 200) {
                     var json = await response.json();
 

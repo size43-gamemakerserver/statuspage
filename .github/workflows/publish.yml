@@ -16,13 +16,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '19'
-          cache: 'yarn'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: yarn install
+        run: npm install
 
       - name: Build
-        run: yarn build
+        run: npm run build
 
       - name: Publish
         uses: cloudflare/pages-action@v1
