@@ -15,8 +15,13 @@ export default {
     data: () => {
         return {
             loadHistory: [
-                1, 4, 66, 77,
-                54, 67, 13
+                { l: 1, a: false },
+                { l: 4, a: false },
+                { l: 66, a: false },
+                { l: 77, a: false },
+                { l: 54, a: false },
+                { l: 67, a: false },
+                { l: 13, a: false }
             ],
             incidents: [],
             status: {
@@ -33,7 +38,7 @@ export default {
                 if (response.status == 200) {
                     var json = await response.json();
 
-                    self.loadHistory = json.loadHistory;
+                    self.loadHistory = json.extendedLoadHistory;
                     self.incidents = json.incidents;
                     self.status = {
                         proxy: json.status.filter(x => x.isProxy)[0],
