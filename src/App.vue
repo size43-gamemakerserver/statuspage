@@ -35,7 +35,7 @@ export default {
         var self = this;
         async function update() {
             try {
-                var response = await fetch('https://gamemakerserver.com/dynamic/status.php');
+                var response = await fetch('https://gms-status.shuttleapp.rs/');
                 if (response.status == 200) {
                     var json = await response.json();
 
