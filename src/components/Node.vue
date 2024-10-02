@@ -1,12 +1,4 @@
 <style scoped>
-    .box {
-        border: 1px solid #888;
-        box-shadow: 0px 0px 16px #ddd;
-        background: #fafafa;
-        position: relative;
-        color: #000000;
-    }
-
     .node {
         flex: 1 1 0;
         padding: 0;
@@ -14,6 +6,7 @@
         display: flex;
         flex-direction: column;
         justify-content: stretch;
+        position: relative;
     }
 
     .box.danger, .danger .box {
@@ -53,6 +46,11 @@
 
     .node .header .title {
         text-align: center;
+        white-space: nowrap;
+    }
+
+    .node .header .title > * {
+        white-space: normal;
     }
 
     .node .header div:first-child {
@@ -65,65 +63,6 @@
 
     .node .header > * {
         padding: 0.8em;
-    }
-
-    .value-table {
-        padding: 0;
-        border: 0;
-        border-spacing: 0;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    .value-table td {
-        padding: 4px;
-        white-space: nowrap;
-    }
-
-    .value-table .count {
-        background: rgba(0, 0, 0, 0.2);
-        padding: 4px;
-    }
-
-    .value-table .danger, .value-table .danger a {
-        background: #ff0000;
-        color: #ffffff;
-    }
-
-    .expandable {
-        position: relative;
-        cursor: default;
-        text-decoration: underline; 
-        text-underline-position: under; 
-        text-decoration-style: dotted;
-    }
-
-    .expandable .expanded {
-        position: absolute;
-        display: block;
-        pointer-events: none;
-
-        right: 0;
-        top: 0;
-
-        z-index: 99;
-        transition: all .15s;
-        opacity: 0;
-        transform: rotateX(20deg) rotateY(20deg) scale(0.8);
-        transform-origin: 100% 0;
-    }
-
-    .expandable.left .expanded {
-        left: 0;
-        right: auto;
-        transform: rotateX(20deg) rotateY(-20deg) scale(0.8);
-        transform-origin: 0 0;
-    }
-
-    .expandable:hover .expanded, .expandable .expanded:hover {
-        padding: 0;
-        opacity: 1;
-        transform: rotateX(0) rotateY(0);
     }
 
     .overlay {
@@ -159,25 +98,29 @@
         font-weight: 900;
     }
 
-    a {
-        text-decoration: none;
-        color: #000000;
-    }
-
     .other {
         color: #aaa;
         cursor: default;
     }
 
-    .tooltip {
-        width: 300px;
+    .connector {
+        position: absolute;
+        width: 100%;
     }
 
-    .tooltip p {
-        padding: 16px !important;
-        margin: 0;
-        text-align: justify;
-        font-weight: 100;
+    .connector.top, .connector.bottom svg {
+        top: 0;
+    }
+
+    .connector.bottom, .connector.top svg {
+        bottom: 0;
+    }
+
+    .connector svg {
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: -1000;
     }
 </style>
 
@@ -185,89 +128,46 @@
    <div :class="[
        'node', 'box',
         { 
-           'danger': status.highLoad,
-           'default': status.isDefault,
+           'danger': highLoad,
+           'default': isDefault,
         }
     ]">
+        <div :class="{
+            'connector': true,
+            'top': connector == 'top',
+            'bottom': connector == 'bottom',
+        }" v-if="connector">
+            <svg width="100%" height="40">
+                <line x1="50%" y1="0" x2="50%" y2="350" :stroke="highLoad ? '#FF0000' : isDefault ? '#1F85DE' : '#555'" stroke-width="8" />
+            </svg>
+        </div>
         <div class="header">
             <div class="expandable left">
-                {{ cpu }}%
+                <slot name="load"></slot>
                 <div class="expanded box">
                     <table class="value-table">
-                        <Indicator item-name="CPU" :good="0.25" :bad="0.75" :value="status.cpu">{{ cpu }}%</Indicator>
-                        <Indicator item-name="RAM" :good="isProxy ? 300 : 200" :bad="isProxy ? 600 : 400" :value="status.ram">{{ status.ram }}MiB</Indicator>
-                        <Indicator v-if="!isProxy" item-name="Min. ping" :good="50" :bad="150" :value="status.minPing">{{ status.minPing }}ms</Indicator>
-                        <Indicator v-if="!isProxy" item-name="Avg. ping" :good="200" :bad="500" :value="status.avgPing">{{ status.avgPing }}ms</Indicator>
-                        <Indicator v-if="!isProxy" item-name="Avg. loop" :good="5" :bad="10" :value="status.avgTick + status.avgReceive">{{ twoDigits(status.avgTick + status.avgReceive) }}ms</Indicator>
-                        <Indicator item-name="Error rate" :good="3" :bad="6" :value="status.errorRate">{{ twoDigits(status.errorRate) }}</Indicator>
+                        <slot name="stats"></slot>
                     </table>
                 </div>
             </div>
-            <h3 class="title" v-if="!isProxy">
-                Instance #{{ status.nodeId }}
-                <span class="expandable left" v-if="status.isDefault">
-                *
-                <div class="box expanded tooltip">
-                    <p>
-                        This is the default node for new connections. If a game does not have sessions running on other nodes, a new session will be started here.
-                    </p>
-                </div>
-                </span>
+            <h3 class="title">
+                <slot name="title"></slot>
             </h3>
-            <h3 class="title" v-if="isProxy">Proxy</h3>
-            <div class="expandable" v-if="!isProxy">
-                {{ status.games.map(x => x.connected).reduce((a, b) => a + b, 0) }}
-                <div class="expanded box">
+            <div :class="{
+                'expandable': $slots.counts ? true : false,
+            }" v-if="$slots.count">
+                <slot name="count"></slot>
+                <div class="expanded box" v-if="$slots.counts">
                     <table class="value-table">
-                        <tbody>
-                            <tr>
-                                <td class="count">{{ status.games.map(x => x.connected).reduce((a, b) => a + b, 0) }}</td>
-                                <td>connected</td>
-                            </tr>
-                            <tr>
-                                <td class="count">{{ status.games.map(x => x.loggedIn).reduce((a, b) => a + b, 0) }}</td>
-                                <td>logged in</td>
-                            </tr>
-                        </tbody>
+                        <slot name="counts"></slot>
                     </table>
                 </div>
             </div>
         </div>
-        <div v-if="isProxy">
-            <p>
-                The proxy node is the entry point for all connections to the server. Here, incoming are inspected and sent on to the right instance. Outgoing messages are sent back to the correct connection.
-            </p>
-        </div>
-        <table class="value-table" v-if="!isProxy">
-            <tr :class="{ 
-                danger: game.highLoad,
-            }" v-for="(game, index) in status.games" :key="index">
-                <td class="count expandable left">
-                    {{ game.connected }}
-                    <div class="expanded box">
-                        <table class="value-table">
-                            <tr>
-                                <td class="count">{{ game.connected }}</td>
-                                <td>connected</td>
-                            </tr>
-                            <tr>
-                                <td class="count">{{ game.loggedIn }}</td>
-                                <td>logged in</td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-                <td>
-                    <a :href="`https://gamemakerserver.com/en/games/${game.id}/`" v-if="game.id != 0">
-                        {{ game.title }}
-                    </a>
-                    <span v-if="game.id == 0" class="other">
-                        {{ game.title}}
-                    </span>
-                </td>
-            </tr>
+        <table class="value-table">
+            <slot name="body"></slot>
         </table>
-        <div class="overlay seethrough" v-if="status.locked">
+        <div class="overlay seethrough" v-if="locked">
             <svg class="scale-5x" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
                 <path d="m3,9v11h14V9M4,9V6c0-3.3 2.7-6 6-6c3.3,0 6,2.7 6,6v3H14V6c0-2.2-1.8-4-4-4-2.2,0-4,1.8-4,4v3"/>
             </svg>
@@ -287,18 +187,10 @@ export default {
         Indicator,
     },
     props: {
-        status: Object,
-        isProxy: Boolean,
+        locked: Boolean,
+        highLoad: Boolean,
+        isDefault: Boolean,
+        connector: String,
     },
-    computed: {
-        cpu() {
-            return (this.status.cpu * 100).toFixed(1)
-        }
-    },
-    methods: {
-        twoDigits(value) {
-            return (value * 1).toFixed(2);
-        }
-    }
 }
 </script>

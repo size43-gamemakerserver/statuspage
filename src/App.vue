@@ -26,7 +26,8 @@ export default {
             incidents: [],
             status: {
                 proxy: {},
-                instances: []
+                instances: [],
+                forwardNodes: [],
             }
         };
     },
@@ -43,6 +44,7 @@ export default {
                     self.status = {
                         proxy: json.status.filter(x => x.isProxy)[0],
                         instances: json.status.filter(x => !x.isProxy),
+                        forwardNodes: json.forwardNodes,
                     };
                 } else {
                     console.log("Received status:", response);
@@ -102,5 +104,88 @@ body {
 #app {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     text-align: center;
+}
+
+.value-table {
+    padding: 0;
+    border: 0;
+    border-spacing: 0;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.value-table td {
+    padding: 4px;
+    white-space: nowrap;
+}
+
+.value-table .count {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px;
+}
+
+.value-table .danger, .value-table .danger a {
+    background: #ff0000;
+    color: #ffffff;
+}
+
+.expandable {
+    position: relative;
+    cursor: default;
+    text-decoration: underline; 
+    text-underline-position: under; 
+    text-decoration-style: dotted;
+}
+
+.expandable .expanded {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+
+    right: 0;
+    top: 0;
+
+    z-index: 99;
+    transition: all .15s;
+    opacity: 0;
+    transform: rotateX(20deg) rotateY(20deg) scale(0.8);
+    transform-origin: 100% 0;
+}
+
+.expandable.left .expanded {
+    left: 0;
+    right: auto;
+    transform: rotateX(20deg) rotateY(-20deg) scale(0.8);
+    transform-origin: 0 0;
+}
+
+.expandable:hover .expanded, .expandable .expanded:hover {
+    padding: 0;
+    opacity: 1;
+    transform: rotateX(0) rotateY(0);
+}
+
+.box {
+    border: 1px solid #888;
+    box-shadow: 0px 0px 16px #ddd;
+    background: #fafafa;
+    position: relative;
+    color: #000000;
+}
+
+a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.tooltip {
+    width: 300px;
+}
+
+.tooltip p {
+    padding: 16px !important;
+    margin: 0;
+    text-align: justify;
+    font-weight: 100;
 }
 </style>
