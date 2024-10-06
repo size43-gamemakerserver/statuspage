@@ -20,10 +20,6 @@
         justify-content: end;
     }
 
-    .nodes.small-rhs * {
-        flex-grow: 0;
-    }
-
     @media (max-width : 1000px) {
         .nodes {
             flex-direction: column;
@@ -60,7 +56,7 @@
         <h1 v-if="status !== null">Detailed view</h1>
         <div class="nodecontainer" v-if="status !== null">
             <div class="nodes small-rhs">
-                <Node connector="bottom" :locked="false" :highLoad="node.highLoad" :isDefault="false" v-for="(node, index) in status.forwardNodes" :key="index">
+                <Node connector="bottom" :locked="false" :highLoad="node.highLoad" :isDefault="node.identifier == 'M'" v-for="(node, index) in status.forwardNodes" :key="index">
                     <template v-slot:title>
                         Entry {{ node.identifier }}
                     </template>
@@ -76,7 +72,7 @@
                         {{ node.num }}
                     </template>
                     <template v-slot:body>
-                        <Chart :points="node.history" :height="45" />
+                        <Chart :points="node.history" :height="60" />
                     </template>
                 </Node>
             </div>
