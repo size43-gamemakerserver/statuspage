@@ -49,7 +49,7 @@
     <div class="content">
         <h1>GameMaker Server Status</h1>
         <div class="chart">
-            <Chart :points="loadHistory" />
+            <Chart :points="loadHistory" :height="200" />
         </div>
 
         <h1 v-if="status !== null">Detailed view</h1>
@@ -69,6 +69,9 @@
                     </template>
                     <template v-slot:count>
                         {{ node.num }}
+                    </template>
+                    <template v-slot:body>
+                        <Chart :points="node.history" :height="45" />
                     </template>
                 </Node>
             </div>
@@ -126,33 +129,35 @@
                         </Indicator>
                     </template>
                     <template v-slot:body>
-                        <tr :class="{ 
-                            danger: game.highLoad,
-                        }" v-for="(game, index) in instance.games" :key="index">
-                            <td class="count expandable left">
-                                {{ game.connected }}
-                                <div class="expanded box">
-                                    <table class="value-table">
-                                        <tr>
-                                            <td class="count">{{ game.connected }}</td>
-                                            <td>connected</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="count">{{ game.loggedIn }}</td>
-                                            <td>logged in</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </td>
-                            <td>
-                                <a :href="`https://gamemakerserver.com/en/games/${game.id}/`" v-if="game.id != 0">
-                                    {{ game.title }}
-                                </a>
-                                <span v-if="game.id == 0" class="other">
-                                    {{ game.title}}
-                                </span>
-                            </td>
-                        </tr>
+                        <table class="value-table">
+                            <tr :class="{ 
+                                danger: game.highLoad,
+                            }" v-for="(game, index) in instance.games" :key="index">
+                                <td class="count expandable left">
+                                    {{ game.connected }}
+                                    <div class="expanded box">
+                                        <table class="value-table">
+                                            <tr>
+                                                <td class="count">{{ game.connected }}</td>
+                                                <td>connected</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="count">{{ game.loggedIn }}</td>
+                                                <td>logged in</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a :href="`https://gamemakerserver.com/en/games/${game.id}/`" v-if="game.id != 0">
+                                        {{ game.title }}
+                                    </a>
+                                    <span v-if="game.id == 0" class="other">
+                                        {{ game.title}}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
                     </template>
                 </Node>
             </div>

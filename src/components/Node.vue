@@ -164,9 +164,7 @@
                 </div>
             </div>
         </div>
-        <table class="value-table">
-            <slot name="body"></slot>
-        </table>
+        <slot name="body"></slot>
         <div class="overlay seethrough" v-if="locked">
             <svg class="scale-5x" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
                 <path d="m3,9v11h14V9M4,9V6c0-3.3 2.7-6 6-6c3.3,0 6,2.7 6,6v3H14V6c0-2.2-1.8-4-4-4-2.2,0-4,1.8-4,4v3"/>

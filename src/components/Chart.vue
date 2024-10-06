@@ -1,5 +1,5 @@
 <template>
-    <svg width="100%" height="200" viewBox="0 0 1000 100" preserveAspectRatio="none">
+    <svg width="100%" :height="height" viewBox="0 0 1000 100" preserveAspectRatio="none">
         <polyline
         fill="#FA6B6B"
         stoke-width="2"
@@ -19,6 +19,7 @@ export default {
     name: 'Chart',
     props: {
         points: Array,
+        height: String,
     },
     computed: {
         pointsStr: function () {
