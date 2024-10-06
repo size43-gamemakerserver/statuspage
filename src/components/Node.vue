@@ -98,11 +98,6 @@
         font-weight: 900;
     }
 
-    .other {
-        color: #aaa;
-        cursor: default;
-    }
-
     .connector {
         position: absolute;
         width: 100%;
