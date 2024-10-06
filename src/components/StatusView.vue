@@ -43,6 +43,11 @@
         display: flex;
         flex-direction: row;
     }
+
+    .other {
+        color: #aaa;
+        cursor: default;
+    }
 </style>
 
 <template>
