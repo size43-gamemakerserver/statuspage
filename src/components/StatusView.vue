@@ -77,7 +77,7 @@
                 </Node>
             </div>
             
-            <Node :locked="false" :highLoad="status.proxy.highLoad" :isDefault="false">
+            <Node :locked="false" :highLoad="status.proxy.highLoad" v-if="status.proxy != undefined" :isDefault="false">
                 <template v-slot:title>
                     Reverse Proxy
                 </template>

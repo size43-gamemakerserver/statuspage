@@ -33,6 +33,10 @@ export default {
     },
     mounted: async function () {
         var self = this;
+        var hosts = [
+            'https://gms-status.infinityfreeapp.com/',
+            'https://gms-status.shuttleapp.rs/'
+        ]
         async function update() {
             try {
                 var response = await fetch('https://gms-status.shuttleapp.rs/');

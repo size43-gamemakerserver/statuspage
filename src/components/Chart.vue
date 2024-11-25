@@ -6,6 +6,11 @@
         :points="redStr"
         />
         <polyline
+        fill="#FFC060"
+        stoke-width="2"
+        :points="orangeStr"
+        />
+        <polyline
         fill="#0072ab30"
         stroke="#97BBCD"
         stoke-width="2"
@@ -45,6 +50,21 @@ export default {
                 for(var i = 0; i < this.points.length; i++)
                 {
                     let y = (100 - (this.points[i].a ? 100 : 0));
+                    s += " " + Math.round(((i - 1) * 1000 / (this.points.length - 1))) + "," + y;
+                    s += " " + Math.round((i * 1000 / (this.points.length - 1))) + "," + y;
+                }
+            }
+
+            return s;
+        },
+        orangeStr: function () {
+            var s = "1000,200 0,200";
+
+            if (this.points) {
+                console.log(this.points, this.points.length, 0 < this.points.length);
+                for(var i = 0; i < this.points.length; i++)
+                {
+                    let y = (100 - (this.points[i].r && !this.points[i].a ? 100 : 0));
                     s += " " + Math.round(((i - 1) * 1000 / (this.points.length - 1))) + "," + y;
                     s += " " + Math.round((i * 1000 / (this.points.length - 1))) + "," + y;
                 }
