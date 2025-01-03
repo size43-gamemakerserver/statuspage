@@ -71,6 +71,14 @@
                     <template v-slot:count>
                         {{ node.num }}
                     </template>
+                    <template v-slot:counts>
+                        <Indicator item-name="connections" :value="node.num">
+                            {{ node.num }}
+                        </Indicator>
+                        <Indicator item-name="valid connections" :value="node.validNum">
+                            {{ node.validNum }}
+                        </Indicator>
+                    </template>
                     <template v-slot:body>
                         <Chart :points="node.history" :height="60" />
                     </template>
