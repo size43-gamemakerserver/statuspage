@@ -163,6 +163,13 @@ body {
     transform-origin: 0 0;
 }
 
+.expandable.middle .expanded {
+    left: -150px;
+    right: auto;
+    transform: rotateY(-90deg) scale(0.8);
+    transform-origin: 50% 0;
+}
+
 .expandable:hover .expanded, .expandable .expanded:hover {
     padding: 0;
     opacity: 1;

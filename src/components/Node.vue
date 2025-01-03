@@ -7,6 +7,7 @@
         flex-direction: column;
         justify-content: stretch;
         position: relative;
+        min-width: 0;
     }
 
     .box.danger, .danger .box {

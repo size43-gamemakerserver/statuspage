@@ -12,8 +12,8 @@
     .nodes {
         display: flex;
         flex-direction: row;
-        margin-top: 30px;
-        margin-bottom: 30px;
+        margin-top: 16px;
+        margin-bottom: 16px;
     }
 
     .nodes.small-rhs {
@@ -106,7 +106,7 @@
                 <Node connector="top" :locked="instance.locked" :highLoad="instance.highLoad" :isDefault="instance.isDefault" v-for="(instance, index) in status.instances" :key="index">
                     <template v-slot:title>
                         Instance #{{ instance.nodeId }}
-                        <span class="expandable left" v-if="instance.isDefault">
+                        <span class="expandable middle" v-if="instance.isDefault">
                         *
                         <div class="box expanded tooltip">
                             <p>
