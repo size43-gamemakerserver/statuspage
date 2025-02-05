@@ -34,12 +34,17 @@ export default {
     mounted: async function () {
         var self = this;
         var hosts = [
+            'https://gms-status.shuttleapp.rs/',
             'https://gms-status.infinityfreeapp.com/',
-            'https://gms-status.shuttleapp.rs/'
-        ]
+            'https://www.gamemakerserver.com/dynamic/status.php',
+        ];
+        var currentHost = 0;
         async function update() {
             try {
-                var response = await fetch('https://gms-status.shuttleapp.rs/');
+                let n = currentHost % hosts.length;
+                console.log("Fetching status from", n, hosts[n]);
+                var response = await fetch(hosts[n], { signal: AbortSignal.timeout(5000) });
+                
                 if (response.status == 200) {
                     var json = await response.json();
 
@@ -51,7 +56,7 @@ export default {
                         forwardNodes: json.forwardNodes,
                     };
                 } else {
-                    console.log("Received status:", response);
+                    console.log("Received non-200 HTTP status:", response);
                     self.status = null;
                     self.incidents = [
                         {
@@ -67,6 +72,8 @@ export default {
                             ]
                         }
                     ];
+
+                    currentHost += 1;
                 }
             } catch (e) {
                 self.status = null;
@@ -86,6 +93,7 @@ export default {
                 ];
 
                 console.log("Error while fetching status page:", e);
+                currentHost += 1;
             }
         }
 
