@@ -34,7 +34,7 @@ export default {
     mounted: async function () {
         var self = this;
         var hosts = [
-            'https://gms-status.shuttleapp.rs/',
+            'https://gms-status-tcr6.shuttle.app/',
             'https://gms-status.infinityfreeapp.com/',
             'https://www.gamemakerserver.com/dynamic/status.php',
         ];
