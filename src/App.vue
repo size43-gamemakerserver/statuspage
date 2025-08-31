@@ -6,6 +6,7 @@
 
 <script>
 import StatusView from './components/StatusView.vue'
+import { markRaw } from 'vue';
 
 export default {
     name: 'App',
@@ -15,13 +16,13 @@ export default {
     data: () => {
         return {
             loadHistory: [
-                { l: 1, a: false },
-                { l: 4, a: false },
-                { l: 66, a: false },
-                { l: 77, a: false },
-                { l: 54, a: false },
-                { l: 67, a: false },
-                { l: 13, a: false }
+                { l: 1, r: false, a: false },
+                { l: 4, r: false, a: false },
+                { l: 66, r: false, a: false },
+                { l: 77, r: false, a: false },
+                { l: 54, r: false, a: false },
+                { l: 67, r: false, a: false },
+                { l: 13, r: false, a: false }
             ],
             incidents: [],
             status: {
@@ -48,13 +49,13 @@ export default {
                 if (response.status == 200) {
                     var json = await response.json();
 
-                    self.loadHistory = json.extendedLoadHistory;
-                    self.incidents = json.incidents;
-                    self.status = {
+                    self.loadHistory = markRaw(json.extendedLoadHistory);
+                    self.incidents = markRaw(json.incidents);
+                    self.status = markRaw({
                         proxy: json.status.filter(x => x.isProxy)[0],
                         instances: json.status.filter(x => !x.isProxy),
                         forwardNodes: json.forwardNodes,
-                    };
+                    });
                 } else {
                     console.log("Received non-200 HTTP status:", response);
                     self.status = null;
